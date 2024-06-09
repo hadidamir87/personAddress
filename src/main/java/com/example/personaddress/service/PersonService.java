@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -37,6 +37,9 @@ public class PersonService extends BaseService<PersonEntity, PersonRepository> {
 
         return repository.save(personEntity);
     }
+    public Optional<PersonEntity> getPersonById(Long id){
+        return repository.findById(id);
+    }
 
     public List<PersonEntity> getAll() {
         return repository.findAll();
@@ -53,8 +56,8 @@ public class PersonService extends BaseService<PersonEntity, PersonRepository> {
         List<PersonEntity> newChildren = children.stream().filter(p -> p.getParent().equals(id))
                 .collect(Collectors.toList());
         return convertor.entityCollectionConvertor(newChildren);
-
     }
+
     public PersonEntity updatePerson(Long id, PersonEntity c) throws Exception {
 
         PersonEntity currentPerson = repository.findById(id).get();
@@ -65,9 +68,7 @@ public class PersonService extends BaseService<PersonEntity, PersonRepository> {
         if (c.getParent() != null) {
             currentPerson.setParent(c.getParent());
         }
-     /*   if (c.getAddresses() != null) {
-            currentPerson.setAddresses(c.getAddresses());
-        }*/
+
         return repository.save(currentPerson);
 
     }

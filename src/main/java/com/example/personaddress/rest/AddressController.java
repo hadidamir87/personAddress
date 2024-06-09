@@ -8,6 +8,7 @@ import com.example.personaddress.model.responseDto.PersonResponse;
 import com.example.personaddress.service.AddressService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -28,12 +29,13 @@ public class AddressController extends BaseController<AddressEntity
 
     @PutMapping("updateAddress/{id}")
     public AddressResponse updateAddress(@PathVariable Long id
-            , @RequestBody AddressRequest rackDto) throws Exception {
+            , @RequestBody AddressRequest addressRequest) throws Exception {
 
-        if (this.findById(id) == null) {
-            throw new Exception("server not fount.");
+        if (service.get(id) == null) {
+            throw new Exception("address not found.");
         }
-        return convertor.convertToResponse(service.updateAddress(id,convertor.convertToEntity(rackDto)));
+        AddressEntity address = convertor.convertToEntity(addressRequest);
+        return convertor.convertToResponse(service.updateAddress(id, address));
     }
 
     @GetMapping("/get/{id}")
@@ -45,9 +47,30 @@ public class AddressController extends BaseController<AddressEntity
         return convertor.convertToResponse(service.get(id));
     }
 
+    @GetMapping("/addresses")
+    public List<AddressResponse> getAllAddress() {
+        return convertor.entityCollectionConvertor(service.getAllAddress());
+    }
+
+    @GetMapping("/getAllAddressWithPagination")
+    public List<AddressResponse> getAllAddressWithPagination(@RequestParam("pageIndex") int pageIndex) {
+        return convertor.entityCollectionConvertor(service.getAllAddressWithPagination(pageIndex));
+    }
+
     @DeleteMapping("delete/{id}")
-    public String deleteAddress(@PathVariable Long id)  {
+    public String deleteAddress(@PathVariable Long id) {
         service.deleteById(id);
-        return "deleted address with :" +id;
+        return "deleted address with :" + id;
+    }
+
+    @PutMapping("setPersonId/{addressId}/{personId}")
+    public String setPersonId(@PathVariable Long addressId
+            , @PathVariable Long personId) throws Exception {
+
+        if (service.get(addressId) == null) {
+            throw new Exception("address not found.");
+        }
+
+        return service.setAddressToPerson(addressId, personId);
     }
 }

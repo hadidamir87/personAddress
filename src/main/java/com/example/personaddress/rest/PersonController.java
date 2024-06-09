@@ -4,6 +4,7 @@ import com.example.personaddress.model.entity.PersonEntity;
 import com.example.personaddress.model.requestDto.PersonRequest;
 import com.example.personaddress.model.responseDto.PersonResponse;
 import com.example.personaddress.service.PersonService;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,7 +41,7 @@ public class PersonController extends BaseController<PersonEntity
         return convertor.convertToResponse(service.get(id));
     }
 
-    @GetMapping
+    @GetMapping("/persons")
     public List<PersonResponse> getAllPerson() {
         return convertor.entityCollectionConvertor(service.getAll());
     }
@@ -48,14 +49,19 @@ public class PersonController extends BaseController<PersonEntity
 
 
     @GetMapping("/getAllPersonWithPagination")
-    public List<PersonResponse> getAllPersonWithPagination(int pageNum) {
-        return convertor.entityCollectionConvertor(service.getAllWithPagination(pageNum));
+    public List<PersonResponse> getAllPersonWithPagination(@RequestParam("pageIndex") int pageIndex) {
+        return convertor.entityCollectionConvertor(service.getAllWithPagination(pageIndex));
     }
 
-    @GetMapping("getChildren/{id}")
+    /*@GetMapping("getChildren/{id}")
     public List<PersonResponse> getChildrenById(@PathVariable Long id) {
         return service.getChildrenById(id);
-    }
+    }*/
 
+    @DeleteMapping("delete/{id}")
+    public String deletePerson(@PathVariable Long id) {
+        service.delete(id);
+        return "deleted person with :" + id;
+    }
 
 }
