@@ -65,9 +65,9 @@ public class PersonService extends BaseService<PersonEntity, PersonRepository> {
         if (c.getParent() != null) {
             currentPerson.setParent(c.getParent());
         }
-        if (c.getAddresses() != null) {
+     /*   if (c.getAddresses() != null) {
             currentPerson.setAddresses(c.getAddresses());
-        }
+        }*/
         return repository.save(currentPerson);
 
     }

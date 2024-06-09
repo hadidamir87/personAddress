@@ -18,7 +18,7 @@ public class BaseService<E, R extends JpaRepository<E, Long>> {
         repository.delete(e);
         return "operation has been complete";
     }
-    public E update(E e) {
+    public E update(Long id,E e) {
         return repository.save(e);
     }
 
