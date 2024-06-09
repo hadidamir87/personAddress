@@ -30,15 +30,9 @@ public class PersonService extends BaseService<PersonEntity, PersonRepository> {
     public PersonEntity create(PersonEntity personEntity) {
         List<AddressEntity> addresses =  personEntity.getAddresses();
 
-//       PersonEntity savedPerson= new PersonEntity();
-
         for(AddressEntity addressEntity : addresses){
-//            AddressEntity address = new AddressEntity();
-//            address.setZipcode(addressEntity.getZipcode());
-//            address.setStreet(addressEntity.getStreet());
-//            address.setCity(addressEntity.getCity());
             addressEntity.setPerson(personEntity);
-//            addressService.create(addressEntity);
+
         }
 
         return repository.save(personEntity);
