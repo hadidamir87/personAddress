@@ -33,7 +33,7 @@ public class AddressController extends BaseController<AddressEntity
         if (this.findById(id) == null) {
             throw new Exception("server not fount.");
         }
-        return convertor.convertToResponse(service.update(id,convertor.convertToEntity(rackDto)));
+        return convertor.convertToResponse(service.updateAddress(id,convertor.convertToEntity(rackDto)));
     }
 
     @GetMapping("/get/{id}")
