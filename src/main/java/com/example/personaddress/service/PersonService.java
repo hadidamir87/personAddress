@@ -42,7 +42,6 @@ public class PersonService extends BaseService<PersonEntity, PersonRepository> {
         return repository.findAll();
     }
 
-
     public List<PersonEntity> getAllWithPagination(int pageNum) {
 
         return repository.findAll(Pageable.ofSize(2).withPage(pageNum)).getContent();
@@ -56,4 +55,21 @@ public class PersonService extends BaseService<PersonEntity, PersonRepository> {
         return convertor.entityCollectionConvertor(newChildren);
 
     }
+    public PersonEntity updatePerson(Long id, PersonEntity c) throws Exception {
+
+        PersonEntity currentPerson = repository.findById(id).get();
+
+        if (c.getName() != null) {
+            currentPerson.setName(c.getName());
+        }
+        if (c.getParent() != null) {
+            currentPerson.setParent(c.getParent());
+        }
+        if (c.getAddresses() != null) {
+            currentPerson.setAddresses(c.getAddresses());
+        }
+        return repository.save(currentPerson);
+
+    }
+
 }

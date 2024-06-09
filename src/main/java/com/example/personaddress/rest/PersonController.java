@@ -24,6 +24,17 @@ public class PersonController extends BaseController<PersonEntity
         return convertor.convertToResponse(service.create(convertor.convertToEntity(personRequest)));
     }
 
+    @PutMapping("updatePerson/{id}")
+    public PersonResponse update(@PathVariable Long id
+            , @RequestBody PersonRequest personRequest) throws Exception {
+
+        if (this.getById(id) == null) {
+            throw new Exception("person not found.");
+        }
+        return convertor.convertToResponse(service
+                .updatePerson(id,convertor.convertToEntity(personRequest)));
+    }
+
     @GetMapping("/{id}")
     public PersonResponse getById(@PathVariable Long id) {
         return convertor.convertToResponse(service.get(id));
