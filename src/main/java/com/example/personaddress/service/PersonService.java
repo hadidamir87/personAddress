@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
@@ -23,16 +25,13 @@ public class PersonService extends BaseService<PersonEntity, PersonRepository> {
     @Autowired
     private PersonConvertor convertor;
 
-    @Autowired
-    private AddressService addressService;
-
     @Override
+    @Transactional(propagation = Propagation.SUPPORTS)
     public PersonEntity create(PersonEntity personEntity) {
         List<AddressEntity> addresses =  personEntity.getAddresses();
 
         for(AddressEntity addressEntity : addresses){
             addressEntity.setPerson(personEntity);
-
         }
 
         return repository.save(personEntity);

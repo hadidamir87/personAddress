@@ -2,9 +2,9 @@ package com.example.personaddress.service;
 
 import com.example.personaddress.model.entity.AddressEntity;
 import com.example.personaddress.repository.AddressRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -16,7 +16,9 @@ public class AddressService extends BaseService<AddressEntity
     public AddressEntity get(Long id) {
         return repository.findById(id).get();
     }
-
+//    @Transactional(isolation = Isolation.DEFAULT)
+//    @Transactional(timeout =30)
+    @Transactional(readOnly = true )
     public List<AddressEntity> getAllAddress() {
         return repository.findAll();
     }
@@ -37,7 +39,7 @@ public class AddressService extends BaseService<AddressEntity
         return repository.save(currentAddress);
 
     }
-
+    @Transactional(rollbackFor = Exception.class)
     public void updatePersonId(Long addressId, Long personId) throws Exception {
 
         AddressEntity currentAddress = repository.findById(addressId).get();
