@@ -1,17 +1,25 @@
 package com.example.personaddress.service;
 
 import com.example.personaddress.model.entity.AddressEntity;
+import com.example.personaddress.model.entity.PersonEntity;
 import com.example.personaddress.repository.AddressRepository;
+import com.example.personaddress.repository.PersonRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AddressService extends BaseService<AddressEntity
         , AddressRepository> {
+    @Autowired
+    private AddressRepository addressRepository;
 
+    @Autowired
+    private PersonRepository personRepository;
 
     public AddressEntity get(Long id) {
         return repository.findById(id).get();
@@ -42,12 +50,17 @@ public class AddressService extends BaseService<AddressEntity
     @Transactional(rollbackFor = Exception.class)
     public void updatePersonId(Long addressId, Long personId) throws Exception {
 
-        AddressEntity currentAddress = repository.findById(addressId).get();
-        PersonService personService = new PersonService();
-        currentAddress.setPerson(personService.getPersonById(personId).get());
+        Optional<AddressEntity> addressOptional = addressRepository.findById(addressId);
+        Optional<PersonEntity> personOptional = personRepository.findById(personId);
 
-        repository.save(currentAddress);
+        if (addressOptional.isPresent() && personOptional.isPresent()) {
+            AddressEntity addressEntity = addressOptional.get();
+            PersonEntity personEntity = personOptional.get();
 
+            addressEntity.setPerson(personEntity);
+            addressRepository.save(addressEntity);
+
+        }
     }
 
     public void deleteById(Long id) {
