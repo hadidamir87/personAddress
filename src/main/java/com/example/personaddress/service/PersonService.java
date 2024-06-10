@@ -1,5 +1,6 @@
 package com.example.personaddress.service;
 
+import com.example.personaddress.aop.exceptionHandller.custom.DuplicatePerson;
 import com.example.personaddress.model.convertor.PersonConvertor;
 import com.example.personaddress.model.entity.AddressEntity;
 import com.example.personaddress.model.entity.PersonEntity;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,15 +30,22 @@ public class PersonService extends BaseService<PersonEntity, PersonRepository> {
     @Override
     @Transactional(propagation = Propagation.SUPPORTS)
     public PersonEntity create(PersonEntity personEntity) {
-        List<AddressEntity> addresses =  personEntity.getAddresses();
-
-        for(AddressEntity addressEntity : addresses){
-            addressEntity.setPerson(personEntity);
+        List<AddressEntity> addresses = personEntity.getAddresses();
+        List<String> c = getAll().stream()
+                .filter(p ->p.getName().equals(personEntity.getName()))
+                .map(personEntity1 -> personEntity1.getName())
+                .collect(Collectors.toList());
+        if (c.size()!=0){
+            throw new DuplicatePerson("name of person is duplicate.");
         }
+            for (AddressEntity addressEntity : addresses) {
+                addressEntity.setPerson(personEntity);
+            }
 
         return repository.save(personEntity);
     }
-    public Optional<PersonEntity> getPersonById(Long id){
+
+    public Optional<PersonEntity> getPersonById(Long id) {
         return repository.findById(id);
     }
 

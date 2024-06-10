@@ -14,7 +14,7 @@ import java.util.List;
 @Data
 @Table(name = "person")
 public class PersonEntity extends EssentialAttribute {
-    @Column(unique = true, nullable = false)
+//    @Column(unique = true, nullable = false)
     private String name;
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
     private List<AddressEntity> addresses;
