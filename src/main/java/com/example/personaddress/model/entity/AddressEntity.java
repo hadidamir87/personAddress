@@ -21,4 +21,6 @@ public class AddressEntity extends EssentialAttribute {
     private PersonEntity person;
 
 
+    public AddressEntity(String s, String springfield) {
+    }
 }

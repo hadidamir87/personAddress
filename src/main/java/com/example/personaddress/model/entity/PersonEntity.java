@@ -23,4 +23,9 @@ public class PersonEntity extends EssentialAttribute {
     @OneToMany(mappedBy = "parent")
     private List<PersonEntity> children;
 
+    public PersonEntity(String johnDoe, List<AddressEntity> addresses) {
+    }
+
+    public PersonEntity(String alice) {
+    }
 }
